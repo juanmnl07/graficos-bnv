@@ -10,7 +10,7 @@
 
 	   function get($tableName)
 	   {
-	   	 	$query = $this->db->prepare("select fecha FROM $tableName");
+	   	 	$query = $this->db->prepare("select fecha, emision, tipo, precio FROM $tableName");
 	      	$query->execute();
 	      	$output = $query->fetch();
 	      	unset($this->db); 
