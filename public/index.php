@@ -33,10 +33,36 @@ $container['db'] = function ($c) {
 
 $container['view'] = new \Slim\Views\PhpRenderer("templates/");
 
+
+
+
+
 $app->get('/{tabla}', function (Request $request, Response $response) {
     $tabla = $request->getAttribute('tabla');
     $grafico = new grafico($this->db);
-    $output = $grafico->get($tabla);
+
+
+    /* Manejo de parametros 
+    *
+    *
+    *   fields[]=fecha                                  para fields
+    *   filters[fecha][condition]==                     para dar condicion de filtro del campo
+    *   filters[fecha][value]="2016-06-30 00:00:00"     para dar valor al filtro
+    *   groupby[]=fecha                                 para agrupar por un campo
+    *   orderby[fecha]=DESC                             para ordenar por campos
+    *   limit[]=1                                       para mandar limites
+    *
+    *
+    *   estos parametros sirven para vistas o tablas
+    */
+
+
+    $fields = $request->getParam('fields');
+    $filters = $request->getParam('filters');
+    $orderby = $request->getParam('orderby');
+    $groupby = $request->getParam('groupby');
+    $limit = $request->getParam('limit');
+    $output = $grafico->get($tabla, $fields, $filters,$orderby,$groupby,$limit);
     $response = $response->withJson($output);
 	//$response = $this->view->render($response, "grafico.phtml", ["output" => $output, "tabla" => $tabla]);
     return $response;
