@@ -35,10 +35,8 @@
 	   				$condition = "=";
 
 	   				if (isset($fieldvalue['condition'])){
-	   					$condition = $fieldvalue['condition'];
-	   					if ($condition == "LIKE" or $condition == "like"){
-	   						$condition = " ".$condition." ";
-	   					}
+	   					$condition = " ".$fieldvalue['condition']." ";
+	   					
 	   				}
 
 	   				$value = "";
@@ -49,6 +47,7 @@
 
 	   				$stringFilters .= $fieldname . $condition . $value;
 	   			}
+	   			//exit(var_export($stringFilters));
 
 	   		}
 
