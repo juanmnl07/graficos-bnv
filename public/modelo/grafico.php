@@ -8,7 +8,7 @@
 	       $this->db = $db;
 	   }
 
-	   function get($tableName, $fields = null, $filters = null, $orderby = null, $groupby = null, $limit = null)
+	   function get($tableName, $fields = null, $orderby = null, $groupby = null, $limit = null, $filters = null, $filtersgroup = null)
 	   {
 
 
@@ -24,32 +24,64 @@
 	   		}
 
 	   		$stringFilters = "";
-	   		if ($filters!=null){
+	   		if($filtersgroup!=null){
 	   			$stringFilters .= "WHERE ";
 
-	   			foreach ($filters as $fieldname => $fieldvalue) {
-	   				if ($stringFilters != "WHERE "){
-	   					$stringFilters .= " AND ";
-	   				}
 
-	   				$condition = "=";
+		   			foreach ($filtersgroup as $filtervalue) {
+		   				if ($stringFilters != "WHERE "){
+		   					$stringFilters .= " OR ";
+		   				}
+		   				 $stringFilters.="(";
+		   				 $stringFilterField ="";
 
-	   				if (isset($fieldvalue['condition'])){
-	   					$condition = " ".$fieldvalue['condition']." ";
-	   					
-	   				}
 
-	   				$value = "";
-	   				if (isset($fieldvalue['value'])){
-	   					$value = $fieldvalue['value'];
+		   				 
+		   				foreach ($filtervalue as $key => $value) {
 
-	   				}
+		   					
+		   					if($stringFilterField!=""){
+		   						$stringFilterField.= " AND ";
+		   					}
+		   					$stringFilterField.=$key."=".$value;
+		   				}
 
-	   				$stringFilters .= $fieldname . $condition . $value;
-	   			}
-	   			//exit(var_export($stringFilters));
+		   				$stringFilters.=$stringFilterField.")";
+		   				
+						
+						
+		   			}
+		   			//exit(var_export($stringFilters));
+	   		}else{
+	   			if ($filters!=null){
+		   			$stringFilters .= "WHERE ";
 
+		   			foreach ($filters as $fieldname => $fieldvalue) {
+		   				if ($stringFilters != "WHERE "){
+		   					$stringFilters .= " AND ";
+		   				}
+
+		   				$condition = "=";
+
+		   				if (isset($fieldvalue['condition'])){
+		   					$condition = " ".$fieldvalue['condition']." ";
+		   					
+		   				}
+
+		   				$value = "";
+		   				if (isset($fieldvalue['value'])){
+		   					$value = $fieldvalue['value'];
+
+		   				}
+
+		   				$stringFilters .= $fieldname . $condition . $value;
+		   			}
+		   			//exit(var_export($stringFilters));
+
+		   		}
 	   		}
+	   		
+	   		//exit(var_export($stringFilters));
 
 	   		$stringOrder = "";
 	   		if ($orderby!=null){

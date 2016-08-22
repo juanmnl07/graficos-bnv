@@ -48,6 +48,7 @@ $app->get('/{tabla}', function (Request $request, Response $response) {
     *   fields[]=fecha                                  para fields
     *   filters[fecha][condition]==                     para dar condicion de filtro del campo
     *   filters[fecha][value]="2016-06-30 00:00:00"     para dar valor al filtro
+    *   filtersgroup[1][ano]=2016&filtersgroup[1][mes]=3    para hacer filtros agrupados. esto genera (Ano=2016 and Mes=3)
     *   groupby[]=fecha                                 para agrupar por un campo
     *   orderby[fecha]=DESC                             para ordenar por campos
     *   limit[]=1                                       para mandar limites
@@ -59,10 +60,11 @@ $app->get('/{tabla}', function (Request $request, Response $response) {
 
     $fields = $request->getParam('fields');
     $filters = $request->getParam('filters');
+    $filtersgroup = $request->getParam('filtersgroup');
     $orderby = $request->getParam('orderby');
     $groupby = $request->getParam('groupby');
     $limit = $request->getParam('limit');
-    $output = $grafico->get($tabla, $fields, $filters,$orderby,$groupby,$limit);
+    $output = $grafico->get($tabla, $fields,$orderby,$groupby,$limit, $filters, $filtersgroup);
     $response = $response->withJson($output);
 	//$response = $this->view->render($response, "grafico.phtml", ["output" => $output, "tabla" => $tabla]);
     return $response;
